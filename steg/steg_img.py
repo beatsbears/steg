@@ -28,7 +28,6 @@ class IMG:
         self.common = common.Common(self.payload_to_hide)
         self.supported = ['PNG','TIFF','TIF','BMP','ICO']
 
-        # assert self.payload_to_hide is not None
         assert self.carrier_image is not None
 
         # Get the file type from payload path
@@ -50,7 +49,7 @@ class IMG:
             # Gets the image mode, hopefully this is L, RGB, or RGBA
             self.image_mode = ''.join(self.fg.getbands())
         except Exception as err:
-            print('Error analyzing image: {} - {}'.format(self.carrier_image, str(err)))
+            raise Exception('Error analyzing image: {} - {}'.format(self.carrier_image, str(err)))
 
     def assign_output_file_type(self):
         '''
@@ -104,12 +103,9 @@ class IMG:
 
         :param payload: This is the path of the payload file.
         '''
-        # get total available bits to hide data
-        area = self.fg.size[1] * self.fg.size[0]
-
         # 3 bytes per pixel should be greater than 2* the binary message length
-        if area*3 <= 2*len(payload):
-            print('[!] Attempting to hide a message that is too large for the carrier')
+        if self.max_image_size*3 <= 2*self.common.get_payload_size(payload):
+            raise Exception('[!] Attempting to hide a message that is too large for the carrier')
 
         # generate bitstream 
         bitstream = iter(self.common.text_to_binary(payload, area * 3))
@@ -136,9 +132,9 @@ class IMG:
                     newIm.putpixel((col, row),(fgr, fgg, fgb))
             output_file_type = self.assign_output_file_type()
             newIm.save(str('new.' + output_file_type), output_file_type)
-            print('{} created'.format('new.' + output_file_type))
+            print('[+] {} created'.format('new.' + output_file_type))
         except Exception as e:
-            print('Failed to write new file: {}'.format(str(e)))
+            raise Exception('Failed to write new file: {}'.format(str(e)))
 
 
     # extract hidden message from RGB image
@@ -162,9 +158,9 @@ class IMG:
                 returned_file = self.common.reconstitute_from_binary(hidden)
                 return returned_file
             except Exception as e:
-                print('Inner failed to extract message: {}'.format(str(e)))
+                raise Exception('Inner failed to extract message: {}'.format(str(e)))
         except Exception as e:
-            print('Outer failed to extract message: {}'.format(str(e)))
+            raise Exception('Outer failed to extract message: {}'.format(str(e)))
 
     #LSB steg for Black and white images
     def L_replace_bits(self, payload):
@@ -172,11 +168,8 @@ class IMG:
         Replace the least-significant bit for L images.
         :param payload: This is the path of the payload file.
         '''
-        # get total available bits to hide data
-        area = self.fg.size[1] * self.fg.size[0]
-
-        if area <= 2*len(payload):
-            print('[!] Attempting to hide a message that is too large for the carrier')
+        if self.max_image_size <= 2*self.common.get_payload_size(payload):
+            raise Exception('[!] Attempting to hide a message that is too large for the carrier')
 
         # generate bitstream 
         bitstream = iter(self.common.text_to_binary(payload, area * 3))
@@ -194,9 +187,9 @@ class IMG:
                     newIm.putpixel((col,row),(fgL))
             output_file_type = self.assign_output_file_type()
             newIm.save(str('new.' + output_file_type), output_file_type)
-            print('{} created'.format('new.' + output_file_type))
+            print('[+] {} created'.format('new.' + output_file_type))
         except Exception as e:
-            print('Failed to write new file: {}'.format(str(e)))
+            raise Exception('Failed to write new file: {}'.format(str(e)))
 
     # extract hidden message from L image
     def L_extract_message(self, fg):
@@ -216,9 +209,9 @@ class IMG:
                 returned_file = self.common.reconstitute_from_binary(hidden)
                 return returned_file
             except Exception as e:
-                print('Inner failed to extract message: {}'.format(str(e)))
+                raise Exception('Inner failed to extract message: {}'.format(str(e)))
         except Exception as e:
-            print('Outer failed to extract message: {}'.format(str(e)))
+            raise Exception('Outer failed to extract message: {}'.format(str(e)))
 
     # replace lest-significant bit for RGBA images
     def RGBA_replace_bits(self, payload):
@@ -226,11 +219,8 @@ class IMG:
         Replace the least-significant bit for RGBA images.
         :param payload: This is the path of the payload file.
         '''
-        # get total available bits to hide data
-        area = self.fg.size[1] * self.fg.size[0]
-
-        if area*3 <= 2*len(payload):
-            print('[!] Attempting to hide a message that is too large for the carrier')
+        if self.max_image_size*3 <= 2*self.common.get_payload_size(payload):
+            raise Exception('[!] Attempting to hide a message that is too large for the carrier')
 
         # generate bitstream 
         bitstream = iter(self.common.text_to_binary(payload, area * 3))
@@ -254,9 +244,9 @@ class IMG:
             # if our passed in location exists, try saving there
             output_file_type = self.assign_output_file_type()
             newIm.save(str('new.' + output_file_type), output_file_type)
-            print('{} created'.format('new.' + output_file_type))
+            print('[+] {} created'.format('new.' + output_file_type))
         except Exception as e:
-            print('[!] Failed to write new file: {}'.format(str(e)))
+            raise Exception('[!] Failed to write new file: {}'.format(str(e)))
 
     # extract hidden message from RGBA image
     def RGBA_extract_message(self, fg):
@@ -278,9 +268,9 @@ class IMG:
                 returned_file = self.common.reconstitute_from_binary(hidden)
                 return returned_file
             except Exception as e:
-                print('Inner failed to extract message: {}'.format(str(e)))
+                raise Exception('Inner failed to extract message: {}'.format(str(e)))
         except Exception as e:
-            print('Outer failed to extract message: {}'.format(str(e)))
+            raise Exception('Outer failed to extract message: {}'.format(str(e)))
     
     def hide(self):
         '''
@@ -289,7 +279,6 @@ class IMG:
         '''
         self._use_correct_function_hide()
 
-
     def extract(self):
         '''
         Extracts a payload from a carrier image if possible. Defaults to output the payload into the
@@ -297,24 +286,3 @@ class IMG:
         '''
         self._use_correct_function_extract()
 
-    def is_file_supported(self, file_extension):
-        '''
-
-        '''
-        if file_extension in self.supported:
-            return True
-        return False
-
-    # returns the total space available to hide data within the desired image
-    def return_max_size(self, file_path):
-        '''
-        '''
-        fg = img.open(file_path)
-        image_mode = ''.join(fg.getbands())
-        max_size = fg.size[1] * fg.size[0]
-        if image_mode == 'L':
-            return (max_size/2)/8
-        elif image_mode in ['RGB', 'BGR', 'RGBA']:
-            return ((max_size*3)/2)/8
-        else:
-            return 0

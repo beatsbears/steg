@@ -3,6 +3,7 @@ steg - common.py
 :author: Andrew Scott
 :date: 6-25-2018
 '''
+import os
 import binascii
 import random
 
@@ -36,7 +37,7 @@ class Common:
             text_file = open(file_path, 'rb')
             hidden_file = file_path.split('.')[-1]
         except Exception as e:
-            print('[!] Failed to open target file: {}'.format(str(e)))
+            raise Exception('[!] Failed to open target file: {}'.format(str(e)))
         try:
             text = text_file.read()
             text += TAB
@@ -61,7 +62,7 @@ class Common:
                 b += str(bin(ord(random.choice('abcdef')))[2:])
             return b
         except Exception as e:
-            print('[!] Text to binary conversion failed! {}'.format(str(e)))
+            raise Exception('[!] Text to binary conversion failed! {}'.format(str(e)))
 
     def set_bit(self, old_byte, new_bit):
         '''
@@ -91,27 +92,32 @@ class Common:
             buffer_idx = as_ascii.find(START_BUFFER)
             buffer_idx2 = as_ascii.find(END_BUFFER)
         except Exception as e:
-            print(str(e))
+            raise Exception(str(e))
 
         if buffer_idx != -1:
             fc = as_ascii[:buffer_idx]
         else:
-            print('[!] Failed to find message buffer...')
+            raise Exception('[!] Failed to find message buffer...')
 
         if buffer_idx2 != -1:
             payload_file_type = '.' + as_ascii[buffer_idx+49:buffer_idx2-1].decode('ascii')
         else:
-            print('[!] Unknown file type in extracted message')
+            raise Exception('[!] Unknown file type in extracted message')
 
         if (buffer_idx != -1) and (buffer_idx2 != -1):
             try:
                 to_save = open('hidden_file' + payload_file_type, 'wb')
                 to_save.write(fc)
                 to_save.close()
-                print('Successfully extracted message: {}{}'.format('hiddenFile', payload_file_type))
+                print('[+] Successfully extracted message: {}{}'.format('hiddenFile', payload_file_type))
             except Exception as e:
-                print('[!] Failed to write extracted file: {}'.format(str(e)))
-                return '.'
+                raise Exception('[!] Failed to write extracted file: {}'.format(str(e)))
             finally:
                 to_save.close()
                 return 'hidden_file' + payload_file_type
+    
+    def get_payload_size(self, file_path):
+        '''
+        Returns the size of the potential payload.
+        '''
+        return os.path.getsize(file_path)*8

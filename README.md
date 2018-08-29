@@ -1,13 +1,14 @@
 # Steg
 
 Steg is a simple python library for hiding and extracting messages from losslessly compressed images using least-significant-bit (LSB) steganography. Current supported image formats include PNG, TIFF, BMP, and ICO.
+Steg also includes a command line tool for quick hiding and extraction.
 
 ## Installation
 ```
 $ pip install steg
 ```
 
-## Usage
+## Usage in Code
 ```
 # Import library
 from steg import steg_img
@@ -24,3 +25,10 @@ s_prime = steg_img.IMG(image_path=<path of containing hidden payload>)
 # Extract the payload
 s_prime.extract()
 ```
+## Commandline Usage
+1. Make the steg.py file executable
+```$ chmod +x steg.py```
+2. To hide a payload in an image:
+```$ ./steg.py -c <your image file> -p <your payload>```
+3. To extract a payload from a carrier:
+```$ ./steg.py -c <your image file>```
