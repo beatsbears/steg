@@ -3,9 +3,7 @@ steg - steg_img.py
 :author: Andrew Scott
 :date: 6-25-2018
 '''
-import os
 from steg import common
-
 from PIL import Image as img
 
 class IMG:

@@ -3,3 +3,8 @@ test_data/*
 __pycache__*
 .vscode/*
 steg/test.py
+steg.egg-info/*
+new.*
+hidden_file.*
+build/*
+dist/*

@@ -3,9 +3,9 @@ steg - common.py
 :author: Andrew Scott
 :date: 6-25-2018
 '''
-import os
-import binascii
-import random
+from os.path import getsize
+from binascii import b2a_hex, a2b_hex
+from random import choice
 
 # Constants
 ###########################################
@@ -49,7 +49,7 @@ class Common:
             text_file.close()
 
             # convert to hex string
-            hex_text = binascii.b2a_hex(text).decode('ascii')
+            hex_text = b2a_hex(text).decode('ascii')
             # convert hex to binary and fill the rest of the bitstream with random hex
             b = ''
             for ch in hex_text:
@@ -59,7 +59,7 @@ class Common:
                         tmp = '0' + tmp
                 b += tmp
             for _ in range(0,(max_size - len(b)),7):
-                b += str(bin(ord(random.choice('abcdef')))[2:])
+                b += str(bin(ord(choice('abcdef')))[2:])
             return b
         except Exception as e:
             raise Exception('[!] Text to binary conversion failed! {}'.format(str(e)))
@@ -87,7 +87,7 @@ class Common:
             if len(c) % 2 != 0:
                 c += 'A'
             # convert back to ascii
-            as_ascii = binascii.a2b_hex(c[:-10].encode('ascii'))
+            as_ascii = a2b_hex(c[:-10].encode('ascii'))
             # check to see if the buffer is intact still
             buffer_idx = as_ascii.find(START_BUFFER)
             buffer_idx2 = as_ascii.find(END_BUFFER)
@@ -120,4 +120,4 @@ class Common:
         '''
         Returns the size of the potential payload.
         '''
-        return os.path.getsize(file_path)*8
+        return getsize(file_path)*8
