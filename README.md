@@ -27,8 +27,8 @@ s_prime.extract()
 ```
 ## Commandline Usage
 1. Make the steg.py file executable
-```$ chmod +x steg.py```
+```$ chmod +x _steg.py```
 2. To hide a payload in an image:
-```$ ./steg.py -c <your image file> -p <your payload>```
+```$ ./_steg.py -c <your image file> -p <your payload>```
 3. To extract a payload from a carrier:
-```$ ./steg.py -c <your image file>```
+```$ ./_steg.py -c <your image file>```

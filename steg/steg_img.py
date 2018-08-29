@@ -4,7 +4,7 @@ steg - steg_img.py
 :date: 6-25-2018
 '''
 import os
-import common
+from steg import common
 
 from PIL import Image as img
 
@@ -108,7 +108,7 @@ class IMG:
             raise Exception('[!] Attempting to hide a message that is too large for the carrier')
 
         # generate bitstream 
-        bitstream = iter(self.common.text_to_binary(payload, area * 3))
+        bitstream = iter(self.common.text_to_binary(payload, self.max_image_size * 3))
 
         # create a new empty image the same size and mode as the original
         newIm = img.new("RGB", (self.fg.size[0], self.fg.size[1]), "white") 
@@ -172,7 +172,7 @@ class IMG:
             raise Exception('[!] Attempting to hide a message that is too large for the carrier')
 
         # generate bitstream 
-        bitstream = iter(self.common.text_to_binary(payload, area * 3))
+        bitstream = iter(self.common.text_to_binary(payload, self.max_image_size * 3))
 
         newIm = img.new("L", (self.fg.size[0], self.fg.size[1]), "white") 
         try:
@@ -223,7 +223,7 @@ class IMG:
             raise Exception('[!] Attempting to hide a message that is too large for the carrier')
 
         # generate bitstream 
-        bitstream = iter(self.common.text_to_binary(payload, area * 3))
+        bitstream = iter(self.common.text_to_binary(payload, self.max_image_size * 3))
 
         newIm = img.new("RGBA", (self.fg.size[0], self.fg.size[1]), "white") 
         try:
