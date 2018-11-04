@@ -10,7 +10,7 @@ Naked==0.1.31
 Pillow==5.2.0
 pylint==2.1.1
 PyYAML==3.13
-requests==2.19.1
+requests==2.20.0
 shellescape==3.4.1
 six==1.11.0
 typed-ast==1.1.0
