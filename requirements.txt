@@ -9,7 +9,7 @@ mccabe==0.6.1
 Naked==0.1.31
 Pillow==5.2.0
 pylint==2.1.1
-PyYAML==3.13
+PyYAML==5.1
 requests==2.20.0
 shellescape==3.4.1
 six==1.11.0
