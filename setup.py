@@ -19,6 +19,6 @@ setup(
     packages=find_packages(),
     license='MIT License',
     install_requires=[
-        "Pillow==5.2.0"
+        "Pillow==6.2.0"
     ],
 )
