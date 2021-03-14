@@ -31,4 +31,4 @@ jobs:
       env:
         OCHRONA_API_KEY: ${{ secrets.OCHRONA_API_KEY }}
       run: |
-        ochrona --file requirements.txt --project_name Steg --debug
+        cat requirements.txt | ochrona --project_name Steg --debug
