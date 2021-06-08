@@ -22,6 +22,6 @@ setup(
     packages=find_packages(),
     license='MIT License',
     install_requires=[
-        "Pillow==8.1.2"
+        "Pillow==8.2.0"
     ],
 )
