@@ -28,7 +28,5 @@ jobs:
       run: |
         black --check ./steg
     - name: SCA check with Ochrona
-      env:
-        OCHRONA_API_KEY: ${{ secrets.OCHRONA_API_KEY }}
       run: |
-        cat requirements.txt | ochrona --project_name Steg --debug
+        cat requirements.txt | ochrona --debug
