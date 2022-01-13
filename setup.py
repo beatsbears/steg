@@ -15,6 +15,7 @@ setup(
     description='Steg is a simple python library for hiding and extracting messages from losslessly compressed images using least-significant-bit (LSB) steganography.',
     long_description=long_description,
     long_description_content_type="text/markdown",
+    python_requires=">=3.7",
     package_dir={"steg": "steg"},
     entry_points={"console_scripts": ["steg=steg._steg:run"]},
     author='Andrew Scott',
